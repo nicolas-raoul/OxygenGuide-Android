@@ -7,23 +7,47 @@
     <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Welcome"
+            android:text="Welcome to OxygenGuide: offline version of Wikivoyage"
+            android:id="@+id/message"
             />
     <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Launch (intent)"
-            android:id="@+id/launch_intent"
+            android:text="Download (only the first time)"
+            android:id="@+id/download"
+            android:onClick="download"/>
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="After clicking above, wait a VERY long time, like one hour (downloading+unzipping). Only after one hour can you use the 2 buttons below:"
+            android:id="@+id/textView2"/>
+    <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Browse (HtmlViewer)"
+            android:id="@+id/launch_html_viewer"
+            android:onClick="launchHtmlViewer"/>
+    <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Browse (Android Browser)"
+            android:id="@+id/launch_android_browser"
             android:onClick="launchIntent"/>
     <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Launch (webview)"
-            android:id="@+id/launch_webview" android:layout_gravity="center"/>
-    <Button
-            android:layout_width="fill_parent"
+            android:text="Update (Not implemented yet)"
+            android:id="@+id/update"
+            android:onClick="checkUpdate"/>
+    <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Check for update"
-            android:id="@+id/check_update"/>
+            android:text="OxygenGuide is still awkward/buggy, but Open Source and looking for volunteers! :-)"
+            android:id="@+id/textView" android:layout_gravity="center"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="https://github.com/nicolas-raoul/OxygenGuide-Android"
+            android:id="@+id/textView1" android:layout_gravity="center"/>
 </LinearLayout>
 
