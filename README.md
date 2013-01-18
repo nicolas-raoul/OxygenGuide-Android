@@ -3,6 +3,6 @@ OxygenGuide-Android
 
 Wikivoyage offline app for Android
 
-Data comes from this wiki-to-HTML project: https://code.google.com/p/oxygenguide/
+Data comes from the [OxygenGuide](https://code.google.com/p/oxygenguide) wiki-to-HTML project.
 
-On Google Play Store: https://play.google.com/store/apps/details?id=org.github.OxygenGuide
+[Install from Google Play Store](https://play.google.com/store/apps/details?id=org.github.OxygenGuide)
