@@ -3,9 +3,6 @@ OxygenGuide-Android
 
 Wikivoyage offline app for Android
 
-App workflow:
+Data comes from the [OxygenGuide](https://code.google.com/p/oxygenguide) wiki-to-HTML project.
 
-1) Launched
-2) if no data, download with progress bar
-3) if data older than 3 months, check version, then download with progress bar if newer release (PHASE2ONLY)
-4) start browser activity on index
+[Install from Google Play Store](https://play.google.com/store/apps/details?id=org.github.OxygenGuide)
