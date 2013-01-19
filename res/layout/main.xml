@@ -16,11 +16,18 @@
             android:text="Download (only the first time)"
             android:id="@+id/download"
             android:onClick="download"/>
+    <ProgressBar
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/download_progress"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:visibility="gone"/>
     <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="After clicking above, wait a VERY long time, like one hour (downloading+unzipping). Only after one hour can you use the 2 buttons below:"
-            android:id="@+id/textView2"/>
+            android:text="Download was successful! Now press the button below:"
+            android:id="@+id/download_text"
+            android:visibility="gone"/>
     <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
