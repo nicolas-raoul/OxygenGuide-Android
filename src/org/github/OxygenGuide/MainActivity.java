@@ -68,21 +68,18 @@ public class MainActivity extends Activity {
 
 	public void launchHtmlViewer(View view) {
 		Toast.makeText(this, "Launching HtmlViewer", Toast.LENGTH_SHORT).show();
-		String url = "content://com.android.htmlfileprovider" + PATH
-				+ "/index.html";
+		String url = "content://com.android.htmlfileprovider" + PATH + "/index.html";
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		intent.setDataAndType(Uri.parse(url), "text/html");
 		startActivity(intent);
 	}
 
 	public void launchAndroidBrowser(View view) {
-		Toast.makeText(this, "Launching Android Browser", Toast.LENGTH_SHORT)
-				.show();
-		String url = "content://com.android.htmlfileprovider\" + PATH + \"/index.html";
+		Toast.makeText(this, "Launching Android Browser", Toast.LENGTH_SHORT).show();
+		String url = "file:/" + PATH + "/index.html";
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		intent.setDataAndType(Uri.parse(url), "text/html");
-		intent.setClassName("com.android.browser",
-				"com.android.browser.BrowserActivity");
+		intent.setClassName("com.android.browser", "com.android.browser.BrowserActivity");
 		startActivity(intent);
 	}
 

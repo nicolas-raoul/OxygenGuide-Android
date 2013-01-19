@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:text="Browse (Android Browser)"
             android:id="@+id/launch_android_browser"
-            android:onClick="launchIntent"/>
+            android:onClick="launchAndroidBrowser"/>
     <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
