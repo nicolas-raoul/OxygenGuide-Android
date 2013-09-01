@@ -35,8 +35,15 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 
 	public static final String TAG = "OxygenGuide";
+    // Find out latest release
+    // TODO read from http://code.google.com/p/oxygenguide/downloads/list
+    // TODO 2: google code are canceling their hosting services....
+    private static final String downURL = "http://oxygenguide.googlecode.com/files/OxygenGuide_2013-08-14-a.zip";
 
-	private static final String PATH = "/sdcard/OxygenGuide";
+	private static final String zipPATH = Environment.getExternalStorageDirectory().getPath() + "/OxygenGuide.zip";
+
+    private static final String INDEX_PATH = "/OxygenGuide_2013-08-14-a/index.html";
+    private static final String AUTHORITY = "org.github.OxygenGuide";
 
 	TextView mDownloadText;
 	ProgressDialog mProgressDialog;
@@ -68,17 +75,17 @@ public class MainActivity extends Activity {
 
 	public void launchHtmlViewer(View view) {
 		Toast.makeText(this, "Launching HtmlViewer", Toast.LENGTH_SHORT).show();
-		String url = "content://com.android.htmlfileprovider" + PATH + "/index.html";
+		Uri url = getIndexUri();
 		Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.setDataAndType(Uri.parse(url), "text/html");
+		intent.setData(url);
 		startActivity(intent);
 	}
 
 	public void launchAndroidBrowser(View view) {
 		Toast.makeText(this, "Launching Android Browser", Toast.LENGTH_SHORT).show();
-		String url = "file:/" + PATH + "/index.html";
+        Uri url = getIndexUri();
 		Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.setDataAndType(Uri.parse(url), "text/html");
+		intent.setDataAndType(url, "text/html");
 		intent.setClassName("com.android.browser", "com.android.browser.BrowserActivity");
 		startActivity(intent);
 	}
@@ -86,6 +93,7 @@ public class MainActivity extends Activity {
 	public void checkUpdate(View view) {
 		Toast.makeText(this, "Check update (Not implemented, check manually)",
 				Toast.LENGTH_SHORT).show();
+        
 	}
 
 	public Runnable updateProgressMessage = new Runnable() {
@@ -99,29 +107,18 @@ public class MainActivity extends Activity {
 	// / Utilities
 	// /////////////////////////////////////////////////////////////////////////////////////
 
-	void deleteIfExists(String path) {
-		if (new File(path).exists())
-			deleteRecursive(new File(path));
-	}
-
-	void deleteRecursive(File fileOrDirectory) {
-		if (fileOrDirectory.isDirectory())
-			for (File child : fileOrDirectory.listFiles())
-				deleteRecursive(child);
-		fileOrDirectory.delete();
-	}
-
+    
+    public static Uri getIndexUri ( ) {
+        return Uri.parse("content://" + AUTHORITY + INDEX_PATH);
+        //return Uri.parse("content://" + AUTHORITY );
+    }
 	// /////////////////////////////////////////////////////////////////////////////////////
 	// / Download async task
 	// /////////////////////////////////////////////////////////////////////////////////////
 
 	private class DownloadFile extends AsyncTask<String, Integer, String> {
 
-		/**
-		 * For the progress dialog, keep track of the number of unzipped directories.
-		 */
-		private int zipDirsCounter = 0;
-
+		
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
@@ -143,39 +140,19 @@ public class MainActivity extends Activity {
 		@Override
 		protected String doInBackground(String... sUrlNOTUSED) {
 			try {
-				// Find out latest release
-				// TODO read from http://code.google.com/p/oxygenguide/downloads/list
-				String latestVersion = "OxygenGuide_2013-01-12-a";
-
+				
 				// Delete files if exist already.
-				deleteIfExists(PATH + ".zip");
-				publishProgress(2); // 2%
-				deleteIfExists("/sdcard/" + latestVersion);
-				publishProgress(6);
-				deleteIfExists(PATH);
+                if (new File(zipPATH).exists()){
+				new File(zipPATH).delete();
+            }
 				publishProgress(10);
 
 				progressMessage = "Downloading OxygenGuide ZIP of HTML pages...";
 				runOnUiThread(updateProgressMessage);
 
-				// Check available space on SD card.
-				// Difference found by "adb shell df" on my SD card
-				// before/after: 917568K
-				// Not sure why it takes so much space, maybe because of the 32K
-				// blocks.
-				StatFs statFs = new StatFs(
-					Environment.getExternalStorageDirectory().getPath());
-				double sdAvailSize = (double) statFs.getAvailableBlocks()
-						* (double) statFs.getBlockSize();
-				if (sdAvailSize < 1000 * 1048576) {
-					TextView message = (TextView) findViewById(R.id.message);
-					message.setText("Insufficient space on SD card, needs 1GB");
-					return "Insufficient space on SD card, needs 1GB";
-				}
 
 				// /////////////////////////////////////// Download
-				URL url = new URL("http://oxygenguide.googlecode.com/files/"
-						+ latestVersion + ".zip");
+				URL url = new URL(downURL);
 				URLConnection connection = url.openConnection();
 				connection.setDoInput(true);
 				connection.setConnectTimeout(10000); // timeout 10 seconds
@@ -186,15 +163,15 @@ public class MainActivity extends Activity {
 				// Download the ZIP.
 				InputStream input = new BufferedInputStream(url.openStream());
 				OutputStream output =
-					new FileOutputStream("/sdcard/OxygenGuide.zip");
+					new FileOutputStream(zipPATH);
 
 				byte buffer[] = new byte[4096];
 				long total = 0;
 				int count;
 				while ((count = input.read(buffer)) != -1) {
 					total += count;
-					// Progress from 10% to 40%.
-					publishProgress((int) (10 + total * 40 / fileLength));
+					// Progress from 0% to 100%.
+					publishProgress((int) ( total * 100 / fileLength));
 					output.write(buffer, 0, count);
 				}
 
@@ -202,99 +179,12 @@ public class MainActivity extends Activity {
 				output.close();
 				input.close();
 				// //////////////////////////////////////////// Download end
-
-				progressMessage = "Unzipping OxygenGuide HTML pages...";
-				runOnUiThread(updateProgressMessage);
-
-				// Unzip.
-				unzip("/sdcard/OxygenGuide.zip", "/sdcard/");
-				Log.d(TAG, "Unzipped.");
-
-				progressMessage = "Finishing...";
-				runOnUiThread(updateProgressMessage);
-
-				// Rename.
-				boolean result = new File("/sdcard/" + latestVersion)
-						.renameTo(new File(PATH));
-				Log.d(TAG, "Renaming result:" + result);
-
-				// Store OxygenGuide data version.
-				try {
-					FileWriter writer = new FileWriter(new File(PATH
-							+ "/OxygenGuide-version.txt"));
-					writer.append(latestVersion);
-					writer.flush();
-					writer.close();
-				} catch (IOException e) {
-					Log.e(TAG, "Error writing version");
-				}
-
-				// Delete ZIP file.
-				deleteRecursive(new File(PATH + ".zip"));
-				Log.d(TAG, "Deleted ZIP file");
-				
 			} catch (Exception e) {
 				Log.e(TAG, "Exception:" + e.getMessage());
 			}
 			return null;
 		}
 
-		// /////////////////////////////////////////////////////////////////////////////////////
-		// / Progress-aware utilities
-		// /////////////////////////////////////////////////////////////////////////////////////
-
-		public void unzip(String zipPath, String destinationPath) {
-			Log.d(TAG, "unzipping " + zipPath + " to " + destinationPath);
-
-			File archive = new File(zipPath);
-			try {
-				ZipFile zipfile = new ZipFile(archive);
-				for (Enumeration e = zipfile.entries(); e.hasMoreElements();) {
-					ZipEntry entry = (ZipEntry) e.nextElement();
-					unzipEntry(zipfile, entry, destinationPath);
-				}
-			} catch (Exception e) {
-				Log.e(TAG, "Error while extracting file " + archive, e);
-			}
-			Log.d(TAG, "Unzipped " + zipPath);
-		}
-
-		private void unzipEntry(ZipFile zipfile, ZipEntry entry,
-				String outputDir) throws IOException {
-
-			if (entry.isDirectory()) {
-				createDir(new File(outputDir, entry.getName()));
-				return;
-			}
-
-			File outputFile = new File(outputDir, entry.getName());
-			if (!outputFile.getParentFile().exists()) {
-				createDir(outputFile.getParentFile());
-			}
-
-			BufferedInputStream inputStream =
-				new BufferedInputStream(zipfile.getInputStream(entry), 8192);
-			BufferedOutputStream outputStream =
-				new BufferedOutputStream(new FileOutputStream(outputFile), 8192);
-
-			try {
-				IOUtils.copy(inputStream, outputStream);
-			} finally {
-				outputStream.close();
-				inputStream.close();
-			}
-		}
-
-		private void createDir(File dir) {
-			if (dir.exists()) {
-				return;
-			}
-			Log.v(TAG, "Creating dir " + dir.getName());
-			// From 50% to 98%. There are around 90 directories in the ZIP.
-			publishProgress((int) (50 + zipDirsCounter++ * (98-50) / 90));
-			if (!dir.mkdirs()) {
-				throw new RuntimeException("Can not create dir " + dir);
-			}
-		}
+		
 	}
 }
