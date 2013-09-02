@@ -26,6 +26,7 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +38,13 @@ public class MainActivity extends Activity {
 	public static final String TAG = "OxygenGuide";
 
 	private static final String PATH = "/sdcard/OxygenGuide";
+	
+	private static final int MENU_PREFERENCES = 0;
+	private static final int PREFERENCES_UPDATE = 0;
 
+	Button mDownloadButton;
+	Button mLaunchHtmlViewer;
+	Button mLaunchAndroidBrowser;
 	TextView mDownloadText;
 	ProgressDialog mProgressDialog;
 	private String progressMessage = null;
@@ -47,14 +54,49 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-		mDownloadText = (TextView) findViewById(R.id.download_text);
+		// Hide download button if already downloaded, hide read buttons if not.
+		mDownloadButton = (Button) findViewById(R.id.download);
+		mLaunchHtmlViewer = (Button) findViewById(R.id.launch_html_viewer);
+		mLaunchAndroidBrowser = (Button) findViewById(R.id.launch_android_browser);
+		if (new File(PATH).exists()) {
+			mDownloadButton.setVisibility(View.GONE);
+		}
+		else {
+			mLaunchHtmlViewer.setVisibility(View.GONE);
+			mLaunchAndroidBrowser.setVisibility(View.GONE);
+		}
 
 		mProgressDialog = new ProgressDialog(MainActivity.this);
-		mProgressDialog.setMessage("Removing previous versions of OxygenGuide...");
+		mProgressDialog.setMessage("Removing previous versions of OxygenGuide... (be patient)");
 		mProgressDialog.setIndeterminate(false);
 		mProgressDialog.setMax(100);
 		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 	}
+	
+//	@Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//		menu.add(Menu.NONE, MENU_PREFERENCES, Menu.NONE, R.string.preferences);
+//		return true;
+//	}
+//	
+//	/** Handles item selections */
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//    	switch (item.getItemId()) {
+//        case MENU_PREFERENCES:
+//            startActivityForResult(new Intent(MainActivity.this, Preferences.class), PREFERENCES_UPDATE);
+//            return true;
+//    	}
+//    	return false;
+//    }
+//    
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+//        super.onActivityResult(requestCode, resultCode, intent);
+//        if (requestCode == PREFERENCES_UPDATE) {
+//        	
+//        }
+//    }
 
 	// /////////////////////////////////////////////////////////////////////////////////////
 	// / UI callbacks
@@ -145,7 +187,7 @@ public class MainActivity extends Activity {
 			try {
 				// Find out latest release
 				// TODO read from http://code.google.com/p/oxygenguide/downloads/list
-				String latestVersion = "OxygenGuide_2013-01-12-a";
+				String latestVersion = "OxygenGuide_2013-01-23-a";
 
 				// Delete files if exist already.
 				deleteIfExists(PATH + ".zip");
@@ -155,7 +197,7 @@ public class MainActivity extends Activity {
 				deleteIfExists(PATH);
 				publishProgress(10);
 
-				progressMessage = "Downloading OxygenGuide ZIP of HTML pages...";
+				progressMessage = "Downloading ZIP of Wikivoyage HTML pages... (be patient)";
 				runOnUiThread(updateProgressMessage);
 
 				// Check available space on SD card.
@@ -203,7 +245,7 @@ public class MainActivity extends Activity {
 				input.close();
 				// //////////////////////////////////////////// Download end
 
-				progressMessage = "Unzipping OxygenGuide HTML pages...";
+				progressMessage = "Unzipping Wikivoyage HTML pages... (be patient)";
 				runOnUiThread(updateProgressMessage);
 
 				// Unzip.

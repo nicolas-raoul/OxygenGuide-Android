@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+	<ListPreference
+		android:title="Browser"
+		android:summary="Select the browser to use for reading"
+		android:key="browser"
+		android:defaultValue="HtmlViewer"
+		android:entries="@array/browsers"
+		android:entryValues="@array/browsersValues" />
+</PreferenceScreen>

@@ -3,58 +3,87 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
+              android:gravity="center_vertical"
+              android:background="@drawable/background"
         >
+
     <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Welcome to OxygenGuide: offline version of Wikivoyage"
-            android:id="@+id/message"
-            />
+        android:id="@+id/message"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dip"
+        android:text="Welcome to Wikivoyage Offline, the offline travel guide!"
+        android:layout_marginLeft="10dip"
+		android:layout_marginRight="10dip"
+        android:textColor="@color/black"
+        />
+
+<!-- Download (only if /sdcard/OxygenGuide does not exist) -->
     <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Download (only the first time)"
+            android:text="Download&#10;(80MB, ~30 minutes)"
             android:id="@+id/download"
-            android:onClick="download"/>
-    <ProgressBar
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/download_progress"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:visibility="gone"/>
-    <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Download was successful! Now press the button below:"
-            android:id="@+id/download_text"
-            android:visibility="gone"/>
+            android:onClick="download"
+            android:layout_marginLeft="10dip"
+			android:layout_marginRight="10dip"
+			android:textColor="@color/black"
+			/>
+
+<!-- Read (only if /sdcard/OxygenGuide exists)-->
     <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Browse (HtmlViewer)"
+            android:text="Read travel guide&#10;(HtmlViewer)"
             android:id="@+id/launch_html_viewer"
-            android:onClick="launchHtmlViewer"/>
+            android:onClick="launchHtmlViewer"
+            android:layout_marginLeft="10dip"
+			android:layout_marginRight="10dip"
+			android:textColor="@color/black"
+			/>
     <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Browse (Android Browser)"
+            android:text="Read travel guide&#10;(Android Browser)"
             android:id="@+id/launch_android_browser"
-            android:onClick="launchAndroidBrowser"/>
+            android:onClick="launchAndroidBrowser"
+            android:layout_marginLeft="10dip"
+			android:layout_marginRight="10dip"
+			android:textColor="@color/black"
+			/>
+
+<!-- Update (only if update available) -->
     <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Update (Not implemented yet)"
             android:id="@+id/update"
-            android:onClick="checkUpdate"/>
+            android:onClick="checkUpdate"
+            android:layout_marginLeft="10dip"
+			android:layout_marginRight="10dip"
+            android:textColor="@color/black"
+            android:visibility="gone"
+            />
+
+<!-- Static -->
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="OxygenGuide is still awkward/buggy, but Open Source and looking for volunteers! :-)"
-            android:id="@+id/textView" android:layout_gravity="center"/>
+            android:text="Wikivoyage Offline (also known as 'OxygenGuide') is Open Source, looking for feedback/volunteers! :-)"
+            android:id="@+id/textView" android:layout_gravity="center"
+            android:layout_marginTop="10dip"
+            android:layout_marginLeft="10dip"
+			android:layout_marginRight="10dip"
+            android:textColor="@color/black"
+            />
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="https://github.com/nicolas-raoul/OxygenGuide-Android"
-            android:id="@+id/textView1" android:layout_gravity="center"/>
+            android:id="@+id/textView1" android:layout_gravity="center"
+            android:layout_marginLeft="10dip"
+			android:layout_marginRight="10dip"
+            android:textColor="@color/black"
+            />
 </LinearLayout>
 
