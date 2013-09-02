@@ -12,3 +12,5 @@ Please report problems, suggest ideas or ask questions [here](https://github.com
 Looking for volunteers, patches are also warmly welcome!
 
 ![Logo](https://raw.github.com/nicolas-raoul/OxygenGuide-Android/master/docs/marketing/logo512.png)
+
+Building: Run `android update project --path .` in `libs/zipfileprovider/libs/zip_file`, then in `libs/zipfileprovider`, then in the main project folder. Finally, run `ant debug`.
