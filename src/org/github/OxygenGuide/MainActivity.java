@@ -40,9 +40,8 @@ public class MainActivity extends Activity {
     // TODO 2: google code are canceling their hosting services....
     private static final String downURL = "http://oxygenguide.googlecode.com/files/OxygenGuide_2013-08-14-a.zip";
 
-	private static final String zipPATH = Environment.getExternalStorageDirectory().getPath() + "/OxygenGuide.zip";
+	private  static String zipPATH = Environment.getExternalStorageDirectory().getPath() + "/OxygenGuide.zip";
 
-    private static final String INDEX_PATH = "/OxygenGuide_2013-08-14-a/index.html";
     private static final String AUTHORITY = "org.github.OxygenGuide";
 
 	TextView mDownloadText;
@@ -51,16 +50,25 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+        super.onCreate(savedInstanceState);
 		
-		mDownloadText = (TextView) findViewById(R.id.download_text);
+        Intent intent = getIntent();
+        if(Intent.ACTION_VIEW.equals(intent.getAction())){
+            Log.v(TAG, "opened with intent to view");
+            // replace the path if opened with a given zip
+            zipPATH = intent.getData().toString();
+        }
+        else{
+            setContentView(R.layout.main);
+            
+            mDownloadText = (TextView) findViewById(R.id.download_text);
 
-		mProgressDialog = new ProgressDialog(MainActivity.this);
-		mProgressDialog.setMessage("Removing previous versions of OxygenGuide...");
-		mProgressDialog.setIndeterminate(false);
-		mProgressDialog.setMax(100);
-		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            mProgressDialog = new ProgressDialog(MainActivity.this);
+            mProgressDialog.setMessage("Removing previous versions of OxygenGuide...");
+            mProgressDialog.setIndeterminate(false);
+            mProgressDialog.setMax(100);
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+    }
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////////
@@ -109,7 +117,20 @@ public class MainActivity extends Activity {
 
     
     public static Uri getIndexUri ( ) {
-        return Uri.parse("content://" + AUTHORITY + INDEX_PATH);
+        //now handle any zip top level directory, hoping it includes index.html
+        // actually reads only first entry in zip, assuming it is the top directory.
+        try{
+        ZipFile zf = new ZipFile(zipPATH);
+        String TopDir =  zf.entries().nextElement().toString();
+        Log.v(TAG, "Found top level zip dir : " +TopDir);
+        zf.close();
+        return Uri.parse("content://" + AUTHORITY +"/"+ TopDir + "index.html");
+        
+    } catch (Exception e) {
+				Log.e(TAG, "Exception:" + e.getMessage());
+                return null;
+			}
+    
         //return Uri.parse("content://" + AUTHORITY );
     }
 	// /////////////////////////////////////////////////////////////////////////////////////
