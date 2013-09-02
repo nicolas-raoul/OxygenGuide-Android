@@ -1,0 +1,10 @@
+*.apk
+*.iml
+.classpath
+.idea
+.project
+bin
+gen
+local.properties
+out
+proguard_logs
