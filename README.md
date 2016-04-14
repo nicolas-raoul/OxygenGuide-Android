@@ -1,6 +1,8 @@
 OxygenGuide-Android
 ===================
 
+2016 UPDATE: This app is now deprecated in favour of [Wikivoyage Offline](https://play.google.com/store/apps/details?id=org.kiwix.kiwixcustomwikivoyage) which is open source too.
+
 Wikivoyage offline app for Android
 
 Data comes from the [OxygenGuide](https://code.google.com/p/oxygenguide) wiki-to-HTML project.
